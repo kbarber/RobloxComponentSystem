@@ -1,21 +1,33 @@
 local Source = script.Parent.Parent
 local Roact = require(Source.Roact)
+local RoactStudioWidgets = require(Source.RoactStudioWidgets)
 local App = require(script.Parent.Components.App)
 local ComponentProvider = require(script.Parent.Components.ComponentProvider)
 local ComponentManager = require(script.Parent.ComponentManager)
+local DockWidgetPluginGui = require(script)
 
 return function(plugin)
 	local componentManager = ComponentManager.new()
 
-	local propertiesInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Right, false)
-	local propertiesGui = plugin:createDockWidgetPluginGui("ComponentVisualizerProperties", propertiesInfo)
-	propertiesGui.Name = "ComponentVisualizerProperties"
-	propertiesGui.Title = "Component Properties"
+	local propertiesGui = c(RoactStudioWidgets.DockWidgetPluginGui, {
+		Name = "ComponentVisualizerProperties",
+		Title = "Component Properties",
+		InitialDockState = Enum.InitialDockState.Right,
+		InitialEnable = false,
+    })
 
-	local addNewInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Float, false, true, 300, 400, 300, 400)
-	local addNewGui = plugin:createDockWidgetPluginGui("ComponentVisualizerAddNew", addNewInfo)
-	addNewGui.Name = "ComponentVisualizerAddNew"
-	addNewGui.Title = "Add component..."
+
+	local addNewGui = c(RoactStudioWidgets.DockWidgetPluginGui, {
+		Name = "ComponentVisualizerAddNew",
+		Title = "Add component...",
+		InitialDockState = Enum.InitialDockState.Float,
+		InitialEnable = false,
+		InitialEnabledShouldOverrideRestore = true,
+		FloatingXSize = 300,
+        FloatingYSize = 400,
+        MinWidth = 300,
+        MinHeight = 400,
+    })
 
 	componentManager.updated:connect(function(oldState, newState)
 		local numSel = #newState.instances
